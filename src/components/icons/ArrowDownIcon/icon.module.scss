@@ -1,0 +1,15 @@
+@import "styles/colorScheme.scss";
+
+.icon {
+    path {
+        fill: $text-color;
+    }
+
+    &.secondary path {
+        fill: $secondary-text-color;
+    }
+
+    &.accent path {
+        fill: var(--text-accent);
+    }
+}

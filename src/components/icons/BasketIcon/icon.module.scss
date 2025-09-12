@@ -1,0 +1,15 @@
+@import "styles/colorScheme.scss";
+
+.icon {
+    path {
+        stroke: $text-color;
+    }
+
+    &.secondary path {
+        stroke: $secondary-text-color;
+    }
+
+    &.accent path {
+        stroke: var(--text-accent);
+    }
+}

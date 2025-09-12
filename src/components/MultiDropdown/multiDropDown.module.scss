@@ -1,0 +1,27 @@
+.dropdown {
+    position: relative;
+}
+
+.dropdown_list {
+    position: absolute;
+    top: calc(100% + 8px);
+    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, .25);
+    width: 100%;
+    background-color: var(--input-bg);
+}
+
+.dropdown_element {
+    padding: 14px 12px;
+    font-size: 16px;
+    line-height: 20px;
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+.dropdown_element:hover {
+    color: var(--text-secondary);
+}
+
+.dropdown_element.active {
+    color: var(--text-accent);
+}

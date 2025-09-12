@@ -1,0 +1,46 @@
+@use "styles/colorScheme.scss" as theme;
+
+.header {
+    height: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: theme.$secondary-bg-color;
+    padding: 0 100px;
+    position: sticky;
+    top: 0;
+    left: 0;
+}
+
+.menu {
+    display: flex;
+    gap: 48px;
+    padding: 0;
+    margin: 0;
+
+    &_item {
+        position: relative;
+        padding: 16px 0;
+
+        ::before {
+            content: "";
+            width: 100%;
+            height: 2px;
+            background-color: theme.$brand;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity .3s;
+        }
+
+        &.active ::before {
+            opacity: 1;
+        }
+    }
+}
+
+.user_controls {
+    display: flex;
+    gap: 24px;
+}

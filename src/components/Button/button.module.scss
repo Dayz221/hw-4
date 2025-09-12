@@ -1,0 +1,46 @@
+.button {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 17px 20px;
+    background-color: var(--brand);
+    border: none;
+    color: var(--button-text-color);
+    font-size: 18px;
+    line-height: 18px;
+    font-weight: 400;
+    letter-spacing: 0%;
+}
+
+.button.loading {
+    padding: 14px 20px;
+}
+
+.button_loader path {
+    fill: var(--button-text-color);
+}
+
+.button:hover {
+    background-color: var(--brand-hover);
+}
+
+.button:active {
+    background-color: var(--brand-active);
+    
+}
+
+.button.loading:hover,
+.button.loading:active {
+    background-color: var(--brand);
+}
+
+.button.disabled,
+.button.loading.disabled {
+    background-color: var(--button-disabled);
+    opacity: 1;
+}
+
+.button.loading.disabled {
+    background-color: var(--button-disabled);
+    opacity: 1;
+}
