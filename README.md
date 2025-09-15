@@ -2,8 +2,6 @@
 
 > Современный веб-сайт, разработанный с использованием React, TypeScript и Vite.
 
-![Превью сайта](https://placeholder.com/1200x600?text=Превью+сайта)
-
 ## 🔧 Технологии
 
 - **Frontend**: React 18+  
@@ -55,3 +53,24 @@ yarn build
 
 Домашнее задание было выполнено по предоставленному дизайну:  
 👉 **[Посмотреть дизайн на Figma](https://www.figma.com/file/V105wd67bkF2X7oOzCLPEG/E-commerce?type=design&mode=design&t=9HPHdd9OSiqVsoSo-0)**
+
+## Превью сайта
+
+### Products 1440px
+![Превью сайта](/screenshots/products_1440.png)
+
+### Product 1440px
+![Превью сайта](/screenshots/product_1440.png)
+
+### Products 768px
+![Превью сайта](/screenshots/products_768.png)
+
+### Product 768px
+![Превью сайта](/screenshots/product_768.png)
+
+### Products 425px
+![Превью сайта](/screenshots/products_425.png)
+
+### Product 425px
+![Превью сайта](/screenshots/product_425.png)
+
