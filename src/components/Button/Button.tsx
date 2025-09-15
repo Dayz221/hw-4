@@ -9,11 +9,13 @@ export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   loading?: boolean;
   /** Текст кнопки */
   children: React.ReactNode;
+
+  color?: "primary" | "secondary";
 };
 
-const Button: React.FC<ButtonProps> = ({loading, children, className, disabled, ...props}) => {
+const Button: React.FC<ButtonProps> = ({loading, children, className, disabled, color = "primary", ...props}) => {
   return (
-    <button className={classNames(styles.button, {[styles.loading]: loading, [styles.disabled]: disabled}, className)} disabled={disabled || loading} {...props} >
+    <button className={classNames(styles.button, {[styles.loading]: loading, [styles.disabled]: disabled}, className, styles[color])} disabled={disabled || loading} {...props} >
       {loading && <Loader className={styles.button_loader} size='s' />}
       {children}
     </button>

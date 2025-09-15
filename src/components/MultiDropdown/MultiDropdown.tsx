@@ -62,7 +62,7 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({className, options, value,
   
   return (
     <div ref={dropdownRef} className={classNames(styles.dropdown, className, {[styles.active]: !disabled && isOpen})}>
-      <Input ref={inputRef} className={styles.dropdown_input} disabled={disabled} value={isOpen ? filter : (value.length !== 0 ? title : "")} placeholder={title} onChange={setFilter} onFocus={() => {setIsOpen(prev => !prev); }} onBlur={() => {setIsOpen(false); setFilter(""); inputRef.current?.blur()}} afterSlot={<ArrowDownIcon color='secondary' />} />
+      <Input ref={inputRef} className={styles.dropdown_input} disabled={disabled} value={isOpen ? filter : (value.length !== 0 ? title : "")} placeholder={title} onChange={setFilter} onFocus={() => {setIsOpen(prev => !prev); }} onBlur={() => {setIsOpen(false); setFilter(""); inputRef.current?.blur()}} afterSlot={<ArrowDownIcon angle={isOpen ? -180 : 0} color='secondary' />} />
       { !disabled && isOpen && 
         <div className={styles.dropdown_list}>
           {

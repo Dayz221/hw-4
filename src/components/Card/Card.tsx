@@ -3,6 +3,7 @@ import React from 'react';
 import Text from '../Text';
 
 import styles from "./card.module.scss"
+import Image from '../Image';
 
 export type CardProps = {
     /** Дополнительный classname */
@@ -27,19 +28,19 @@ const Card: React.FC<CardProps> = ({className, image, captionSlot, title, subtit
     return (
         <div className={classNames(styles.card, className)} onClick={onClick}>
             <div className={styles.card_image}>
-                <img src={image} alt="" />
+                <Image src={image} />
             </div>
 
             <div className={styles.card_info}>
                 <div className={styles.text_side}>
-                    { captionSlot && <div className={styles.caption_slot}>{captionSlot}</div> }
+                    { captionSlot && <Text view='p-14' weight='medium' color='secondary'>{captionSlot}</Text> }
                     <Text view='p-20' weight='bold' maxLines={2} >{ title }</Text>
                     <Text view='p-16' maxLines={3} color='secondary' >{ subtitle }</Text>
                 </div>
 
                 <div className={styles.action_side}>
-                    <div className={styles.content_slot}>{contentSlot}</div>
-                    <div>{actionSlot}</div>
+                    { captionSlot && <Text view='p-18' weight='bold'>{contentSlot}</Text> }
+                    <div onClick={e => e.stopPropagation()}>{actionSlot}</div>
                 </div>
             </div>
         </div>

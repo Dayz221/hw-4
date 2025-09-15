@@ -1,3 +1,5 @@
+@use "styles/theme";
+
 .loader {
     width: 60px;
     height: 60px;
@@ -8,7 +10,7 @@
 }
 
 .loader path {
-    fill: var(--brand);
+    fill: theme.$brand;
 }
 
 .loader svg {

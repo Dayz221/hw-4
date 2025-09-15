@@ -8,7 +8,9 @@ const App: React.FC = () => {
     return (
         <div className="page_container">
             <Header />
-            <Outlet />
+            <div className="page_content">
+                <Outlet />
+            </div>
         </div>
     )
 }

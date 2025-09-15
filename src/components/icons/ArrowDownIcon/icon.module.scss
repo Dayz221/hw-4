@@ -1,15 +1,19 @@
-@import "styles/colorScheme.scss";
+@use "styles/theme";
 
 .icon {
     path {
-        fill: $text-color;
+        fill: theme.$text-color;
     }
 
     &.secondary path {
-        fill: $secondary-text-color;
+        fill: theme.$secondary-text-color;
     }
 
     &.accent path {
-        fill: var(--text-accent);
+        fill: theme.$accent-text-color;
+    }
+
+    &.light path {
+        fill: theme.$button-text-color;
     }
 }

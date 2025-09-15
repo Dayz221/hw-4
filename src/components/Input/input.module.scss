@@ -1,36 +1,38 @@
+@use "styles/theme";
+
 .input_container {
     padding: 0 11px;
     display: flex;
-    background-color: var(--input-bg);
-    border: 1px solid var(--input-bg);
+    background-color: theme.$secondary-bg-color;
+    border: 1px solid theme.$secondary-bg-color;
     align-items: center;
-}
 
-.input_container:nth-last-child {
-    flex: 0 0 auto;
-}
+    &:nth-last-child {
+        flex: 0 0 auto;
+    }
 
-.input_container:focus-within {
-    border-color: var(--text-accent);
-}
+    &:focus-within {
+        border-color: theme.$accent-text-color;
+    }
 
-.input_container input {
-    background-color: var(--input-bg);
-    font-size: 16px;
-    line-height: 20px;
-    border: none;
-    outline: none;
-    padding: 0;
-    color: var(--text-color);
-    min-width: 0;
-    width: 100%;
-    padding: 15px 0;
-}
+    input {
+        background-color: theme.$secondary-bg-color;
+        font-size: 16px;
+        line-height: 20px;
+        border: none;
+        outline: none;
+        padding: 0;
+        color: theme.$text-color;
+        min-width: 0;
+        width: 100%;
+        padding: 15px 0;
+    }
 
-.input_container input::placeholder {
-    color: var(--input-placeholder);
-}
+    input::placeholder {
+        color: theme.$secondary-text-color;
+    }
 
-.input_container input:disabled {
-    color: var(--input-placeholder);
+    input:disabled {
+        color: theme.$secondary-text-color;
+    }
 }

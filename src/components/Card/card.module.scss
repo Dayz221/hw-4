@@ -1,6 +1,13 @@
+@use "styles/theme";
+@use "styles/consts";
+
 .card {
-    max-width: 360px;
-    background-color: var(--button-disabled);
+    background-color: theme.$secondary-bg-color;
+    transition: box-shadow .3s;
+    display: flex;
+    flex-direction: column;
+    min-width: 0px;
+    cursor: pointer;
 }
 
 .card:hover {
@@ -19,11 +26,12 @@
 }
 
 .card_info {
-    background-color: var(--card-bg);
-    padding: 24px 12px;
+    background-color: theme.$secondary-bg-color;
+    padding: consts.$medium-padding consts.$extrasmall-padding;
     display: flex;
     flex-direction: column;
     gap: 20px;
+    flex: 1 1 auto;
 }
 
 .text_side {
@@ -36,17 +44,5 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-}
-
-.content_slot {
-    font-size: 18px;
-    line-height: 22px;
-    font-weight: 700;
-}
-
-.caption_slot {
-    font-size: 14px;
-    line-height: 18px;
-    font-weight: 500;
-    color: var(--text-secondary);
+    margin-top: auto;
 }

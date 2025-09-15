@@ -1,66 +1,85 @@
-@use '../../styles/colorScheme.scss' as theme;
-@import '../../styles/Roboto/fonts.css';
+@use 'styles/theme';
+@import 'styles/Roboto/fonts.css';
 
 .text {
     color: inherit;
     overflow: hidden;
     text-overflow: ellipsis;
-    -webkit-box-orient: vertical; 
+    -webkit-box-orient: vertical;
     display: -webkit-box;
     font-family: 'Roboto', sans-serif;
     transition: color .3s;
-}
+    margin: 0;
+    padding: 0;
 
-.text.titile {
-    font-size: 44px;
-    line-height: 48px;
-}
+    &.title {
+        font-size: 44px;
+        line-height: 48px;
+    }
 
-.text.button {
-    font-size: 18px;
-    line-height: 18px;
-}
+    &.button {
+        font-size: 18px;
+        line-height: 18px;
+    }
 
-.text.p-20 {
-    font-size: 20px;
-    line-height: 24px;
-}
+    &.p-32 {
+        font-size: 32px;
+        line-height: 36px;
+    }
 
-.text.p-18 {
-    font-size: 18px;
-    line-height: 22px;
-}
+    &.p-20 {
+        font-size: 20px;
+        line-height: 24px;
+    }
 
-.text.p-16 {
-    font-size: 16px;
-    line-height: 20px;
-}
+    &.p-18 {
+        font-size: 18px;
+        line-height: 22px;
+    }
 
-.text.p-14 {
-    font-size: 14px;
-    line-height: 18px;
-}
+    &.p-16 {
+        font-size: 16px;
+        line-height: 20px;
+    }
 
-.text.primary {
-    color: theme.$text-color;
-}
+    &.p-14 {
+        font-size: 14px;
+        line-height: 18px;
+    }
 
-.text.secondary {
-    color: theme.$secondary-text-color;
-}
+    &.primary {
+        color: theme.$text-color;
+    }
 
-.text.accent {
-    color: theme.$accent-text-color;
-}
+    &.secondary {
+        color: theme.$secondary-text-color;
+    }
 
-.text.normal {
-    font-weight: 400;
-}
+    &.accent {
+        color: theme.$accent-text-color;
+    }
 
-.text.medium {
-    font-weight: 500;
-}
+    &.normal {
+        font-weight: 400;
+    }
 
-.text.bold {
-    font-weight: 700;
+    &.medium {
+        font-weight: 500;
+    }
+
+    &.bold {
+        font-weight: 700;
+    }
+
+    &.left {
+        text-align: left;
+    }
+
+    &.center {
+        text-align: center;
+    }
+
+    &.right {
+        text-align: right;
+    }
 }

@@ -2,6 +2,9 @@ import { Navigate, type RouteObject } from "react-router";
 import App from "../app";
 import ProductsPage from "../pages/ProductsPage";
 import ProductPage from "../pages/ProductPage";
+import CategoriesPage from "../pages/CategoriesPage";
+import AboutPage from "../pages/AboutPage";
+import Page404 from "../pages/Page404";
 
 export const routesConfig: RouteObject[] = [
     {
@@ -9,24 +12,32 @@ export const routesConfig: RouteObject[] = [
         element: <App />,
         children: [
             {
+                index: true,
+                element: <Navigate replace to="/products" />
+            },
+            {
                 path: "/products",
                 element: <ProductsPage />
             },
             {
-                path: "/products/:id",
+                path: "/products/:page",
+                element: <ProductsPage />
+            },
+            {
+                path: "/product/:id",
                 element: <ProductPage />
             },
             {
                 path: "/categories",
-                element: <ProductPage />
+                element: <CategoriesPage />
             },
             {
                 path: "/about_us",
-                element: <ProductPage />
+                element: <AboutPage />
             },
             {
                 path: "*",
-                element: <Navigate to="/products" />
+                element: <Page404 />
             }
         ]
     }
