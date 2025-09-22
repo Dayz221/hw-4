@@ -1,0 +1,15 @@
+@use "styles/mixins";
+@use "styles/theme";
+
+.image {
+    @include mixins.square(100%);
+    object-fit: cover;
+}
+
+.loader {
+    @include mixins.square(100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: theme.$loader-bg;
+}

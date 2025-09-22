@@ -1,69 +1,76 @@
-# React + TypeScript + Vite
+# 🌐 Домашнее задание №3
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> Современный веб-сайт, разработанный с использованием React, TypeScript и Vite.
 
-Currently, two official plugins are available:
+## 🔧 Технологии
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Frontend**: React 18+  
+- **Типизация**: TypeScript  
+- **Сборщик**: Vite  
+- **Менеджер пакетов**: Yarn  
+- **CSS**: CSS Modules + SCSS
+- **Форматирование**: Prettier + ESLint  
 
-## Expanding the ESLint configuration
+## 📁 Структура проекта
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+├── components/      # Повторно используемые UI-компоненты
+├── pages/           # Страницы приложения
+├── assets/          # Изображения, шрифты, стили
+├── utils/           # Вспомогательные функции
+├── app/             # Основной компонент приложения
+├── main.tsx         # Точка входа
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## ▶️ Запуск проекта
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Убедитесь, что у вас установлен [Node.js](https://nodejs.org/) (v18+) и [Yarn](https://yarnpkg.com/).
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+# 1. Клонируйте репозиторий
+git clone https://github.com/Dayz221/hw-3.git
+cd hw-3
+
+# 2. Установите зависимости
+yarn install
+
+# 3. Запустите разработку
+yarn dev
+
+# 4. Откройте в браузере: http://localhost:5173
 ```
+
+## 🚀 Сборка для продакшена
+
+```bash
+yarn build
+```
+
+Оптимизированные файлы будут сгенерированы в директории `dist/`.
+
+## 🎨 Дизайн и макеты
+
+Домашнее задание было выполнено по предоставленному дизайну:  
+👉 **[Посмотреть дизайн на Figma](https://www.figma.com/file/V105wd67bkF2X7oOzCLPEG/E-commerce?type=design&mode=design&t=9HPHdd9OSiqVsoSo-0)**
+
+## Превью сайта
+
+### Products 1440px
+![Превью сайта](/screenshots/products_1440.png)
+
+### Product 1440px
+![Превью сайта](/screenshots/product_1440.png)
+
+### Products 768px
+![Превью сайта](/screenshots/products_768.png)
+
+### Product 768px
+![Превью сайта](/screenshots/product_768.png)
+
+### Products 425px
+![Превью сайта](/screenshots/products_425.png)
+
+### Product 425px
+![Превью сайта](/screenshots/product_425.png)
+
