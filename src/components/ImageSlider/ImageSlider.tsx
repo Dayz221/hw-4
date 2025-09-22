@@ -1,15 +1,14 @@
 import type React from "react";
-import type { ProductCardImage } from "../../api/Strapi/Products";
-
 import styles from "./ImageSlider.module.scss";
 import { useState } from "react";
 import ArrowDownIcon from "../icons/ArrowDownIcon";
 import Image from "../Image/Image";
+import type { ProductCardImageModel } from "../../store/models/products/ProductCardImage";
 
 type ImageSliderProps = {
     width?: string;
     height?: string;
-    images: ProductCardImage[];
+    images: ProductCardImageModel[];
 };
 
 const ImageSlider: React.FC<ImageSliderProps> = ({width="100%", height="100%", images}) => {

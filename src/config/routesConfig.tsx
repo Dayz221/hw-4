@@ -7,6 +7,7 @@ import AboutPage from "../pages/AboutPage";
 import Page404 from "../pages/Page404";
 
 import { ROUTES } from "./routes"
+import CartPage from "../pages/CartPage";
 
 export const routesConfig: RouteObject[] = [
     {
@@ -32,6 +33,10 @@ export const routesConfig: RouteObject[] = [
             {
                 path: ROUTES.aboutUs.path,
                 element: <AboutPage />
+            },
+            {
+                path: ROUTES.cart.path,
+                element: <CartPage />
             },
             {
                 path: "*",

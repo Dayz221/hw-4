@@ -18,4 +18,9 @@ export const ROUTES = {
         path: "/about_us",
         get: () => "/about_us"
     },
+    
+    cart: {
+        path: "/basket",
+        get: () => "/basket"
+    }
 }

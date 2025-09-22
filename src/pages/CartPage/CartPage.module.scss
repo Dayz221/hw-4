@@ -1,0 +1,20 @@
+@use "styles/consts";
+
+.title {
+    margin: consts.$big-padding 0 consts.$small-padding;
+}
+
+.products {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    justify-items: center;
+    gap: 30px consts.$cards-gap;
+    margin-bottom: 65px;
+}
+
+.no_elements {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: consts.$small-padding;
+}
