@@ -22,11 +22,11 @@ body {
     box-sizing: border-box;
     padding-bottom: consts.$big-padding;
 
-    @media screen and (max-width: 1024px) {
+    @media screen and (max-width: consts.$desktop-breakpoint) {
         padding-bottom: consts.$medium-padding;
     }
 
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: consts.$tablet-breakpoint) {
         padding-bottom: consts.$small-padding;
     }
 }
@@ -36,11 +36,11 @@ body {
     flex: 1 1 auto;
     padding: 0 consts.$big-padding;
 
-    @media screen and (max-width: 1024px) {
+    @media screen and (max-width: consts.$desktop-breakpoint) {
         padding: 0 consts.$medium-padding;
     }
 
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: consts.$tablet-breakpoint) {
         padding: 0 consts.$small-padding;
     }
 }

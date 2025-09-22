@@ -10,17 +10,18 @@ import ImageSlider from "../../components/ImageSlider";
 import { evalPrice } from "../../utils/evalPrice";
 import Button from "../../components/Button";
 import Card from "../../components/Card";
+import { DESKTOP_WIDTH } from "../../consts";
 
 const ProductPage: React.FC = () => {
     const { id } = useParams();
     const [product, setProduct] = useState<ProductCard | null>(null);
     const navigate = useNavigate();
 
-    const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth <= 1024);
+    const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth <= DESKTOP_WIDTH);
 
     useEffect(() => {
         const onResize = () => {
-            setIsMobile(window.innerWidth <= 1024);
+            setIsMobile(window.innerWidth <= DESKTOP_WIDTH);
         }
 
         window.addEventListener("resize", onResize);
@@ -28,20 +29,14 @@ const ProductPage: React.FC = () => {
         return () => window.removeEventListener("resize", onResize);
     }, [])
 
-    const related_items: ProductCard[] = JSON.parse(localStorage.getItem("related_items") || "[]");
-
-    if (!id) {
-        navigate("/products");
-        return;
-    }
-
     useEffect(() => {
-        fetchProduct(id)
+        fetchProduct(id || "")
             .then(res => {
                 setProduct(res);
-                console.log(res);
             })
     }, [id])
+
+    const related_items: ProductCard[] = JSON.parse(localStorage.getItem("related_items") || "[]");
 
     return (
         <>
@@ -54,9 +49,9 @@ const ProductPage: React.FC = () => {
                 <div className={styles.product}>
                     <ImageSlider images={product.images} />
                     <div className={styles.product_info}>
-                        <Text tag="h1" className={styles.title} view="title" maxLines={2} weight="bold">{product.title}</Text>
-                        <Text className={styles.description} view="p-20" maxLines={4} color="secondary">{product.description}</Text>
-                        <Text className={styles.price} view="title" weight="bold">${evalPrice(product.price, product.discountPercent).toFixed(2)}</Text>
+                        <Text tag="h1" className={styles.title} view={isMobile ? "p-32" : "title"} maxLines={2} weight="bold">{product.title}</Text>
+                        <Text className={styles.description} view={isMobile ? "p-16" : "p-20"} maxLines={4} color="secondary">{product.description}</Text>
+                        <Text className={styles.price} view={isMobile ? "p-32" : "title"} weight="bold">${evalPrice(product.price, product.discountPercent).toFixed(2)}</Text>
 
                         <div className={styles.actions}>
                             <Button>Buy now</Button>

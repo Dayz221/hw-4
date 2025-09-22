@@ -6,6 +6,8 @@ import CategoriesPage from "../pages/CategoriesPage";
 import AboutPage from "../pages/AboutPage";
 import Page404 from "../pages/Page404";
 
+import { ROUTES } from "./routes"
+
 export const routesConfig: RouteObject[] = [
     {
         path: "/",
@@ -13,26 +15,22 @@ export const routesConfig: RouteObject[] = [
         children: [
             {
                 index: true,
-                element: <Navigate replace to="/products" />
+                element: <Navigate replace to={ROUTES.products.get()} />
             },
             {
-                path: "/products",
+                path: ROUTES.products.path,
                 element: <ProductsPage />
             },
             {
-                path: "/products/:page",
-                element: <ProductsPage />
-            },
-            {
-                path: "/product/:id",
+                path: ROUTES.product.path,
                 element: <ProductPage />
             },
             {
-                path: "/categories",
+                path: ROUTES.categories.path,
                 element: <CategoriesPage />
             },
             {
-                path: "/about_us",
+                path: ROUTES.aboutUs.path,
                 element: <AboutPage />
             },
             {

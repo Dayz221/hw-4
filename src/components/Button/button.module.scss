@@ -54,11 +54,11 @@
     }
 
     &.secondary:hover {
-        background-color: #e5e5e5;
+        background-color: theme.$secondary-button-hover;
     }
     
     &.secondary:active {
-        background-color: #dddddd;
+        background-color: theme.$secondary-button-active;
     }
 }
 

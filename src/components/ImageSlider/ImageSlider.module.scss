@@ -1,5 +1,6 @@
 @use "styles/consts";
 @use "styles/theme";
+@use "styles/mixins";
 
 .image_slider {
     position: relative;
@@ -8,14 +9,14 @@
 
     .left_arrow,
     .right_arrow {
+        @include mixins.square(64px);
+
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
         overflow: hidden;
         background-color: theme.$slider-button-color;
         z-index: 5;
-        width: 64px;
-        height: 64px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -23,9 +24,8 @@
         box-shadow: 0 4px 20px 0 rgba(175, 173, 181, 0.2);
         cursor: pointer;
 
-        @media screen and (max-width: 425px) {
-            width: 45px;
-            height: 45px;
+        @media screen and (max-width: consts.$mobile-breakpoint) {
+            @include mixins.square(45px);
         }   
     }
 

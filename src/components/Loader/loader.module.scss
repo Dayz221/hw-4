@@ -1,8 +1,9 @@
 @use "styles/theme";
+@use "styles/mixins";
 
 .loader {
-    width: 60px;
-    height: 60px;
+    @include mixins.square(60px);
+    
     padding: 10px;
     display: flex;
     justify-content: center;
@@ -18,14 +19,14 @@
 }
 
 .loader.m {
-    width: 48px;
-    height: 48px;
+    @include mixins.square(48px);
+
     padding: 8px;
 }
 
 .loader.s {
-    width: 24px;
-    height: 24px;
+    @include mixins.square(24px);
+
     padding: 4px;
 }
 

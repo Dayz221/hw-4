@@ -11,6 +11,7 @@ import Card from "../../components/Card";
 import { useNavigate, useParams } from "react-router";
 import { evalPrice } from "../../utils/evalPrice";
 import PageSelector from "../../components/PageSelector";
+import { ROUTES } from "../../config/routes";
 
 const ProductsPage: React.FC = () => {
     const [searchFilter, setSearchFilter] = useState<string>("");
@@ -36,6 +37,8 @@ const ProductsPage: React.FC = () => {
     ]
 
     const [filters, setFilters] = useState<Option[]>([]);
+    const getDropdownTitle = (values: Option[]) => values.length === 0 ? "Filter" : values.map(el => el.value).join(", ");
+
     const [cards, setCards] = useState<ProductCard[]>([])
     const [paginationInfo, setPaginationInfo] = useState<PaginationInfo>({ page: 0, pageCount: 0, pageSize: 0, total: 0 });
     const { page } = useParams();
@@ -48,10 +51,6 @@ const ProductsPage: React.FC = () => {
             })
     }, [page]);
 
-    useEffect(() => {
-        console.log(paginationInfo)
-    }, [paginationInfo]);
-
     const onCardClick = (data: ProductCard) => {
         const related_items: ProductCard[] = JSON.parse(localStorage.getItem("related_items") || "[]");
         if (related_items.find(el => el.id === data.id) === undefined) {
@@ -62,7 +61,7 @@ const ProductsPage: React.FC = () => {
             localStorage.setItem("related_items", JSON.stringify(related_items));
         }
 
-        navigate(`/product/${data.documentId}`);
+        navigate(ROUTES.product.get(data.documentId));
     };
 
     return (
@@ -82,7 +81,7 @@ const ProductsPage: React.FC = () => {
                 <div className={styles.filters_block}>
                     <MultiDropdown
                         options={allOptions}
-                        getTitle={(values) => values.length === 0 ? "Filter" : values.map(el => el.value).join(", ")}
+                        getTitle={getDropdownTitle}
                         value={filters}
                         onChange={setFilters}
                     />
@@ -112,7 +111,7 @@ const ProductsPage: React.FC = () => {
             </div>
 
             <div className={styles.pagination}>
-                <PageSelector page={!page ? 1 : +page} cnt_of_pages={paginationInfo.pageCount} onChange={(p) => navigate(`/products/${p}`)} />
+                <PageSelector page={!page ? 1 : +page} cntOfPages={paginationInfo.pageCount} onChange={(p) => navigate(`/products/${p}`)} />
             </div>
         </>
     )

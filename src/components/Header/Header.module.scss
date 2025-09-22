@@ -1,5 +1,6 @@
 @use "styles/theme";
 @use "styles/consts";
+@use "styles/mixins";
 
 .header {
     height: auto;
@@ -13,11 +14,11 @@
     left: 0;
     z-index: 10;
 
-    @media screen and (max-width: 1024px) {
+    @media screen and (max-width: consts.$desktop-breakpoint) {
         padding: 0 consts.$medium-padding;
     }
 
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: consts.$tablet-breakpoint) {
         padding: 0 consts.$small-padding;
     }
 }
@@ -56,8 +57,7 @@
 }
 
 .menu_icon {
-    width: 40px;
-    height: 40px;
+    @include mixins.square(40px);
     padding: 10px;
     box-sizing: border-box;
     background-color: transparent;
@@ -75,13 +75,13 @@
 
 .mobile_menu {
     z-index: 15;
-    height: 100%;
-    width: 100%;
+    @include mixins.square(100%);
+
     position: fixed;
     top: 0;
-    left: -100%;
+    right: -100%;
     background-color: theme.$secondary-bg-color;
-    transition: left .3s;
+    transition: right .3s;
     padding: 20px;
     display: flex;
     flex-direction: column-reverse;
@@ -90,12 +90,12 @@
     gap: 30px;
 
     .close {
+        @include mixins.square(30px);
+
         box-sizing: border-box;
         position: absolute;
         right: 20px;
         top: 20px;
-        width: 30px;
-        height: 30px;
     }
 
     .close * {
@@ -133,8 +133,8 @@
             }
         }
     }
-}
-
-.mobile_menu.active {
-    left: 0;
+    
+    &.active {
+        right: 0;
+    }
 }

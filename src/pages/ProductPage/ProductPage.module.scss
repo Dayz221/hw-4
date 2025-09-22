@@ -18,7 +18,7 @@
         background-color: theme.$secondary-bg-color;
     }
 
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: consts.$tablet-breakpoint) {
         margin-top: consts.$small-padding;
     }
 }
@@ -29,7 +29,7 @@
     column-gap: consts.$medium-padding;
     margin-bottom: consts.$medium-padding;
 
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: consts.$tablet-breakpoint) {
         display: flex;
         flex-direction: column;
         gap: 20px;
@@ -43,7 +43,7 @@
 .description {
     margin-bottom: 88px;
 
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: consts.$tablet-breakpoint) {
         margin-bottom: consts.$medium-padding;
     }
 }
@@ -66,11 +66,11 @@
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: consts.$cards-gap;
 
-    @media screen and (max-width: 1024px) {
+    @media screen and (max-width: consts.$desktop-breakpoint) {
         gap: consts.$medium-padding;
     }
 
-    @media screen and (max-width: 425px) {
+    @media screen and (max-width: consts.$mobile-breakpoint) {
         display: flex;
         flex-direction: column;
         gap: consts.$small-padding;

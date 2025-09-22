@@ -17,22 +17,18 @@ const Image: React.FC<ImageProperies> = ({ width = "100%", height = "100%", src,
     const [loading, setLoading] = useState(true);
 
     return (
-        <>
-            <div style={{width, height}}>
-                <img
-                    className={classNames(styles.image, className)}
-                    onLoad={() => setLoading(false)}
-                    onError={() => setError(true)}
-                    style={{ display: (loading || error) ? "none" : "block" }}
-                    src={src}
-                    {...props}
-                />
+        <div style={{width, height}}>
+            <img
+                className={classNames(styles.image, className)}
+                onLoad={() => setLoading(false)}
+                onError={() => setError(true)}
+                style={{ display: (loading || error) ? "none" : "block" }}
+                src={src}
+                {...props}
+            />
 
-                { (loading || error) && <div className={styles.loader}> <Loader /> </div> }
-            </div>
-
-
-        </>
+            { (loading || error) && <div className={styles.loader}> <Loader /> </div> }
+        </div>
     )
 }
 

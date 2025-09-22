@@ -48,8 +48,12 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({className, options, value,
   const dropdownRef = useRef<null | HTMLDivElement>(null);
   const inputRef = useRef<null | HTMLInputElement>(null);
 
+  const findByKey = <T extends {key: unknown}>(values: T[], element: T): T | undefined => {
+    return values.find(el => el.key === element.key);
+  };
+
   const handleClick = (data: Option) => {
-    if (!!value.find(el => el.key === data.key)) {
+    if (!!findByKey(value, data)) {
       const changedArray = value.filter(el => el.key !== data.key);
       onChange(changedArray);
     } else {
@@ -67,7 +71,7 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({className, options, value,
         <div className={styles.dropdown_list}>
           {
             options.filter(el => el.value.toLowerCase().startsWith(filter.toLowerCase().trim())).sort().map(data => {
-              return <DropdownElement key={data.key} data={data} onClick={handleClick} active={!!value.find(el => el.key === data.key)} />
+              return <DropdownElement key={data.key} data={data} onClick={handleClick} active={!!findByKey(value, data)} />
             })
           }
         </div>
