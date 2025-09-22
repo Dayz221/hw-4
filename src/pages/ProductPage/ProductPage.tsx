@@ -1,6 +1,5 @@
 import type React from "react";
 import { useNavigate, useParams } from "react-router";
-import { fetchProduct, type ProductCard } from "../../api/Strapi/Products";
 import { useEffect, useState } from "react";
 
 import styles from "./ProductPage.module.scss";
@@ -11,10 +10,19 @@ import { evalPrice } from "../../utils/evalPrice";
 import Button from "../../components/Button";
 import Card from "../../components/Card";
 import { DESKTOP_WIDTH } from "../../consts";
+import type { ProductCardModel } from "../../store/models/products/ProductCard";
+import { useLocalStore } from "../../store/useLocalStore/useLocalStore";
+import ProductStore from "../../store/ProductStore/ProductStore";
+import { Meta } from "../../utils/meta";
+import { observer } from "mobx-react-lite";
+import { toJS } from "mobx";
+import Loader from "../../components/Loader";
+import { ROUTES } from "../../config/routes";
+import rootStore from "../../store/RootStore";
 
 const ProductPage: React.FC = () => {
     const { id } = useParams();
-    const [product, setProduct] = useState<ProductCard | null>(null);
+    const productStore = useLocalStore(() => new ProductStore());
     const navigate = useNavigate();
 
     const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth <= DESKTOP_WIDTH);
@@ -30,13 +38,10 @@ const ProductPage: React.FC = () => {
     }, [])
 
     useEffect(() => {
-        fetchProduct(id || "")
-            .then(res => {
-                setProduct(res);
-            })
+        productStore.fetchProduct(id || "");
     }, [id])
 
-    const related_items: ProductCard[] = JSON.parse(localStorage.getItem("related_items") || "[]");
+    const related_items: ProductCardModel[] = JSON.parse(localStorage.getItem("related_items") || "[]");
 
     return (
         <>
@@ -45,17 +50,23 @@ const ProductPage: React.FC = () => {
                 <Text className={styles.back_button_text} view="p-20">Back</Text>
             </button>
 
-            {product &&
+            {productStore.meta === Meta.loading && 
+                <div className={styles.loader_container}>
+                    <Loader />
+                </div>
+            }
+
+            {productStore.meta === Meta.success && productStore.product &&
                 <div className={styles.product}>
-                    <ImageSlider images={product.images} />
+                    <ImageSlider images={toJS(productStore.product.images)} />
                     <div className={styles.product_info}>
-                        <Text tag="h1" className={styles.title} view={isMobile ? "p-32" : "title"} maxLines={2} weight="bold">{product.title}</Text>
-                        <Text className={styles.description} view={isMobile ? "p-16" : "p-20"} maxLines={4} color="secondary">{product.description}</Text>
-                        <Text className={styles.price} view={isMobile ? "p-32" : "title"} weight="bold">${evalPrice(product.price, product.discountPercent).toFixed(2)}</Text>
+                        <Text tag="h1" className={styles.title} view={isMobile ? "p-32" : "title"} maxLines={2} weight="bold">{productStore.product.title}</Text>
+                        <Text className={styles.description} view={isMobile ? "p-16" : "p-20"} maxLines={4} color="secondary">{productStore.product.description}</Text>
+                        <Text className={styles.price} view={isMobile ? "p-32" : "title"} weight="bold">${evalPrice(productStore.product.price, productStore.product.discountPercent).toFixed(2)}</Text>
 
                         <div className={styles.actions}>
                             <Button>Buy now</Button>
-                            <Button color="secondary">Add to Cart</Button>
+                            <Button color="secondary" onClick={() => rootStore.cart.addItem(productStore.product!)} disabled={!productStore.product}>{rootStore.cart.checkInCart(productStore.product) ? "On cart!" : "Add to Cart"}</Button>
                         </div>
                     </div>
                 </div>
@@ -77,7 +88,7 @@ const ProductPage: React.FC = () => {
                             captionSlot={data.productCategory.title}
                             contentSlot={`$${evalPrice(data.price, data.discountPercent).toFixed(2)}`}
                             actionSlot={<Button>Add to Cart</Button>}
-                            onClick={() => navigate(`/product/${data.documentId}`)}
+                            onClick={() => navigate(ROUTES.product.get(data.documentId))}
                         />
                     })
                 }
@@ -86,4 +97,4 @@ const ProductPage: React.FC = () => {
     )
 }
 
-export default ProductPage;
+export default observer(ProductPage);

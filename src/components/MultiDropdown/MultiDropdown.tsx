@@ -53,7 +53,7 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({className, options, value,
   };
 
   const handleClick = (data: Option) => {
-    if (!!findByKey(value, data)) {
+    if (findByKey(value, data)) {
       const changedArray = value.filter(el => el.key !== data.key);
       onChange(changedArray);
     } else {

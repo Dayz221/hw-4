@@ -1,63 +1,31 @@
 import STRAPI from "."
 import qs from "qs"
+import type { FetchProductsResponseModel } from "../../store/models/products/FetchProductsResponse";
+import type { ProductCardModel } from "../../store/models/products/ProductCard";
+import type { Option } from "../../components/MultiDropdown";
 
-export type ProductCardImage = {
-    url: string,
-    formats: {
-        large: {
-            url: string
-        },
-        medium: {
-            url: string
-        },
-        small: {
-            url: string
-        },
-        thumbnail: {
-            url: string
-        },
-    }
-};
+export const fetchCategories = async () => {
+    const response = await STRAPI.get("/product-categories");
 
-export type ProductCard = {
-    id: number,
-    documentId: string,
+    return response.data.data;
+}
 
-    title: string,
-    description: string,
-
-    price: number,
-    discountPercent: number,
-
-    rating: number,
-    isInStock: boolean,
-
-    images: ProductCardImage[],
-    productCategory: {
-        id: number,
-        documentId: string,
-        title: string,
-    }
-};
-
-export type PaginationInfo = {
-    page: number;
-    pageCount: number;
-    pageSize: number;
-    total: number;
-};
-
-export type FetchProductsResponse = {
-    data: ProductCard[];
-    pagination: PaginationInfo;
-};
-
-export const fetchProducts: (page?: number, pageSize?: number) => Promise<FetchProductsResponse> = async (page = 0, pageSize = 20) => {
+export const fetchProducts = async (page: number = 1, search: string = "", categories: Option[] = [], pageSize: number = 8): Promise<FetchProductsResponseModel> => {
     const query = qs.stringify({
         populate: ['images', 'productCategory'],
         pagination: {
             page,
             pageSize,
+        },
+        filters: {
+            title: {
+                $containsi: search
+            },
+            productCategory: {
+                id: {
+                    $in: categories?.map(el => Number(el.key))
+                }
+            },
         }
     });
 
@@ -66,7 +34,7 @@ export const fetchProducts: (page?: number, pageSize?: number) => Promise<FetchP
     return { data: response.data.data, pagination: response.data.meta.pagination };
 };
 
-export const fetchProduct: (documentId: string) => Promise<ProductCard> = async (id) => {
+export const fetchProduct: (documentId: string) => Promise<ProductCardModel> = async (id) => {
     const query = qs.stringify({
         populate: ['images', 'productCategory'],
     });
