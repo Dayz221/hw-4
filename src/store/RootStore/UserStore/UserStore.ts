@@ -45,9 +45,9 @@ export class UserStore {
         if (this._meta === Meta.loading) {
             return;
         }
-
-        let response: RegisterUserApi | undefined;
+        
         this._meta = Meta.loading;
+        let response: RegisterUserApi | undefined;
         try {
             response = await registerUser({ username, email, password });
         } catch {
@@ -56,7 +56,10 @@ export class UserStore {
                 this._meta = Meta.error;
             });
         }
-        if (!response) return;
+        if (!response) {
+            this._meta = Meta.error;
+            return;
+        }
         runInAction(() => {
             try {
                 const { jwt, user } = normalizeRegisterUser(response);
@@ -86,7 +89,10 @@ export class UserStore {
                 this._meta = Meta.error;
             });
         }
-        if (!response) return;
+        if (!response) {
+            this._meta = Meta.error;
+            return;
+        }
         runInAction(() => {
             try {
                 const { jwt, user } = normalizeLoginUser(response);
