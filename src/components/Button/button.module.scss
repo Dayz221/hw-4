@@ -36,13 +36,13 @@
         background-color: var(--brand);
     }
 
-    &.disabled,
-    &.loading.disabled {
+    &:disabled,
+    &.loading:disabled {
         background-color: var(--button-disabled);
         opacity: 1;
     }
 
-    &.loading.disabled {
+    &.loading:disabled {
         background-color: var(--button-disabled);
         opacity: 1;
     }
@@ -59,6 +59,12 @@
     
     &.secondary:active {
         background-color: theme.$secondary-button-active;
+    }
+
+    &.small {
+        padding: 14px;
+        font-size: 14px;
+        line-height: 1;
     }
 }
 

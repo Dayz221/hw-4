@@ -3,13 +3,14 @@ import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios";
 class APIClient {
     client: AxiosInstance;
 
-    constructor(baseURL: string, token?: string) {
+    constructor(baseURL: string) {
         this.client = axios.create({
             baseURL,
             timeout: 1000
         })
 
         this.client.interceptors.request.use((config) => {
+            const token = localStorage.getItem("jwt");
             if (token) {
                 config.headers.Authorization = `Bearer ${token}`;
             }
@@ -22,7 +23,7 @@ class APIClient {
         return await this.client.get(path, options);
     }
 
-    async post(path: string, data: any = {}, options: AxiosRequestConfig = {}) {
+    async post(path: string, data: unknown = {}, options: AxiosRequestConfig = {}) {
         return await this.client.post(path, data, options);
     }
 

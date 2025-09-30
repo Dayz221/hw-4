@@ -4,17 +4,17 @@ import { Outlet } from "react-router";
 
 import "./App.scss";
 import { useQueryStore } from "../store/RootStore/hooks/useQueryStore";
-import { useEffect } from "react";
-import { fetchCategories } from "../api/Strapi/Products";
 import { useCartStore } from "../store/RootStore/hooks/useCartStore";
+import { useEffect } from "react";
+import rootStore from "../store/RootStore";
 
 const App: React.FC = () => {
+    useEffect(() => {
+        rootStore.user.fetchUserData();
+    }, []);
+    
     useQueryStore();
     useCartStore();
-
-    useEffect(() => {
-        fetchCategories();
-    }, [])
 
     return (
         <div className="page_container">

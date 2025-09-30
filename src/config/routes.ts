@@ -22,5 +22,20 @@ export const ROUTES = {
     cart: {
         path: "/basket",
         get: () => "/basket"
-    }
+    },
+    
+    register: {
+        path: "/register",
+        get: () => "/register"
+    },
+    
+    login: {
+        path: "/login",
+        get: () => "/login"
+    },
+    
+    account: {
+        path: "/account",
+        get: () => "/account"
+    },
 }

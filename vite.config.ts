@@ -20,14 +20,11 @@ const parseTsConfigPaths = (paths: Record<string, string[]>): Record<string, str
 };
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, ".")
+  loadEnv(mode, process.cwd());
   return {
-    define: {
-      "process.env": env
-    },
     plugins: [react()],
     resolve: {
       alias: parseTsConfigPaths(tsconfig.compilerOptions.paths),
     }
-  }
-})
+  };
+});

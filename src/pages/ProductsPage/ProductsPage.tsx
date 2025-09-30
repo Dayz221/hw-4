@@ -3,45 +3,107 @@ import Text from "../../components/Text";
 
 import styles from "./Products.module.scss";
 import Input from "../../components/Input";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Button from "../../components/Button";
 import MultiDropdown, { type Option } from "../../components/MultiDropdown";
-import Card from "../../components/Card";
-import { useLocation, useNavigate } from "react-router";
-import { evalPrice } from "../../utils/evalPrice";
+import { useNavigate } from "react-router";
 import PageSelector from "../../components/PageSelector";
 import { ROUTES } from "../../config/routes";
 import ProductsStore from "../../store/ProductsStore";
 import type { ProductCardModel } from "../../store/models/products/ProductCard";
-import qs from "qs";
 import { useLocalStore } from "../../store/useLocalStore/useLocalStore";
 import { observer } from "mobx-react-lite";
 import { toJS } from "mobx";
 import rootStore from "../../store/RootStore";
 import { Meta } from "../../utils/meta";
 import Loader from "../../components/Loader";
+import { DeviceType, useDeviceType } from "../../hooks/useDeviceType";
+import { ROWS_COUNT } from "../../consts";
+import qs from "qs";
+
+type QueryParams = {
+    page: number,
+    search: string,
+    categories: Option[]
+}
+
+const initialQueryParams: QueryParams = {
+    page: 1,
+    search: "",
+    categories: []
+}
+
+const toQueryString = (qp: QueryParams) => {
+    const result: { [key: string]: number | string | Option[] } = {};
+    if (qp.page) {
+        result.page = Number(qp.page);
+    }
+    if (qp.search.length > 0) {
+        result.search = qp.search
+    }
+    if (qp.categories.length > 0) {
+        result.categories = qp.categories;
+    }
+
+    return `?${qs.stringify(result)}`;
+}
+
+import ProductItem from "./ProductItem.tsx";
 
 const ProductsPage: React.FC = () => {
     const productsStore = useLocalStore(() => new ProductsStore());
+    const categoriesStore = productsStore.categoriesStore;
     const navigate = useNavigate();
     const location = useLocation();
 
-    const [search, setSearch] = useState("");
-    const [categories, setCategories] = useState<Option[]>([]);
+    const [search, setSearch] = useState<string>("");
+    const [queryParams, setQueryParams] = useState<QueryParams>(initialQueryParams);
 
+    const deviceType = useDeviceType();
+
+    // We intentionally run this once after query store becomes loaded; further changes are handled elsewhere.
     useEffect(() => {
-        const parsed = qs.parse(location.search.slice(1));
-        setSearch(parsed.search as string || "");
-        setCategories(parsed.categories as Option[] || []);
+        if (!rootStore.query.loaded) return;
+        const s = (rootStore.query.getParam("search") as string) || "";
+        const c = (rootStore.query.getParam("categories") as Option[] | undefined) || [];
+        setQueryParams(prev => ({ ...prev, search: s, categories: c }));
+        setSearch(s);
     }, []);
 
     useEffect(() => {
-        productsStore.fetchCategories();
-    }, [])
+        categoriesStore.fetchCategories();
+    }, [categoriesStore])
+
+    const pageParam = rootStore.query.getParam("page");
+    const searchParamCurrent = rootStore.query.getParam("search");
+    const categoriesParamCurrent = rootStore.query.getParam("categories");
+
+    const querySnapshot = useMemo(() => {
+        const page = Number(pageParam || 1);
+        const sParam = String(searchParamCurrent || "");
+        const cParam = (categoriesParamCurrent as Option[] | undefined) || [];
+        return { page, searchParam: sParam, categoriesParam: cParam };
+    }, [pageParam, searchParamCurrent, categoriesParamCurrent]);
+
+    const queryLoaded = rootStore.query.loaded;
+    const categoriesMeta = productsStore.categoriesStore.meta;
 
     useEffect(() => {
-        productsStore.fetchProducts();
-    }, [rootStore.query.getParam("page"), rootStore.query.getParam("categories"), rootStore.query.getParam("search")])
+        if (!queryLoaded || categoriesMeta !== Meta.success) return;
+
+        const count = deviceType === DeviceType.desktop
+            ? ROWS_COUNT * 3
+            : deviceType === DeviceType.tablet
+                ? ROWS_COUNT * 2
+                : ROWS_COUNT;
+
+        productsStore.fetchProducts({
+            page: querySnapshot.page,
+            search: querySnapshot.searchParam,
+            categories: querySnapshot.categoriesParam,
+            count
+        });
+    }, [queryLoaded, categoriesMeta, deviceType, productsStore, querySnapshot]);
 
     const getDropdownTitle = (values: Option[]) => values.length === 0 ? "Filter" : values.map(el => el.value).join(", ");
 
@@ -60,19 +122,13 @@ const ProductsPage: React.FC = () => {
     };
 
     const onPageChange = (newPage: number) => {
-        const prevQuery = qs.parse(location.search.slice(1));
-        const newQuery = { ...prevQuery, page: newPage };
-        navigate({
-            pathname: location.pathname,
-            search: qs.stringify(newQuery),
-        });
+        setQueryParams(prev => ({ ...prev, page: newPage }));
+        navigate({ search: toQueryString({ ...queryParams, page: newPage }) });
     }
 
     const onSearchClick = () => {
-        navigate({
-            pathname: location.pathname,
-            search: qs.stringify({ ...qs.parse(location.search.slice(1)), search: search, categories: categories }),
-        });
+        setQueryParams(prev => ({ ...prev, search, page: 1 }));
+        navigate({ search: toQueryString({ ...queryParams, search, page: 1 }) });
     }
 
     const onSearchChange = (newSearch: string) => {
@@ -80,7 +136,12 @@ const ProductsPage: React.FC = () => {
     }
 
     const onCategoriesChange = (newCategories: Option[]) => {
-        setCategories(newCategories);
+        setQueryParams(prev => ({ ...prev, categories: newCategories, page: 1 }));
+        navigate({ search: toQueryString({ ...queryParams, categories: newCategories, page: 1 }) });
+    }
+
+    const onAddItem = (id: number) => {
+        rootStore.cart.addItem(id, 1);
     }
 
     return (
@@ -99,16 +160,16 @@ const ProductsPage: React.FC = () => {
 
                 <div className={styles.filters_block}>
                     <MultiDropdown
-                        options={toJS(productsStore.categories)}
+                        options={toJS(productsStore.categoriesStore.categories)}
                         getTitle={getDropdownTitle}
-                        value={categories}
+                        value={productsStore.categoriesStore.validate(queryParams.categories)}
                         onChange={onCategoriesChange}
                     />
                 </div>
             </div>
 
 
-            {productsStore.meta === Meta.loading && <div className={styles.loader_container}><Loader /></div>}
+            {(productsStore.meta !== Meta.success || productsStore.categoriesStore.meta !== Meta.success) && <div className={styles.loader_container}><Loader /></div>}
 
             {
                 productsStore.meta === Meta.success &&
@@ -117,32 +178,42 @@ const ProductsPage: React.FC = () => {
                         <Text view="p-32" weight="bold">Total products</Text>
                         <Text view="p-20" color="accent" weight="bold">{productsStore.pagination.total}</Text>
                     </div>
-                    <div className={styles.products}>
-                        {
-                            productsStore.products.map(data => {
-                                const onCart = rootStore.cart.checkInCart(data);
+                    {
+                        productsStore.products.length === 0 &&
+                        <>
+                            <Text weight="medium" view="p-32" align="center">No products found...</Text>
+                            <Text weight="normal" view="p-20" align="center" color="secondary">Try searching for something else</Text>
+                        </>
+                    }
+                    {
+                        productsStore.products.length !== 0 &&
+                        <>
+                            <div className={styles.products}>
+                                {
+                                    productsStore.products.map(data => {
+                                        const onCart = rootStore.cart.checkInCart(data);
 
-                                return <Card
-                                    key={data.id}
-                                    image={data.images[0].url}
-                                    subtitle={data.description}
-                                    title={data.title}
-                                    captionSlot={data.productCategory.title}
-                                    contentSlot={`$${evalPrice(data.price, data.discountPercent).toFixed(2)}`}
-                                    actionSlot={<Button onClick={() => rootStore.cart.addItem(data)}>{onCart ? "On Cart!" : "Add to Cart"}</Button>}
-                                    onClick={() => onCardClick(data)}
-                                />
-                            })
-                        }
-                    </div>
+                                        return <ProductItem 
+                                            key={data.id} 
+                                            data={data} 
+                                            onAdd={onAddItem} 
+                                            onClick={() => onCardClick(data)} 
+                                            onCart={onCart} 
+                                        />;
+                                    })
+                                }
+                            </div>
+                            <div className={styles.pagination}>
+                                <PageSelector page={productsStore.pagination.page} cntOfPages={productsStore.pagination.pageCount} onChange={onPageChange} />
+                            </div>
+                        </>
+                    }
 
-                    <div className={styles.pagination}>
-                        <PageSelector page={productsStore.pagination.page} cntOfPages={productsStore.pagination.pageCount} onChange={onPageChange} />
-                    </div>
                 </>
             }
         </>
     )
 }
 
-export default observer(ProductsPage);
+const ObservedProductsPage = observer(ProductsPage);
+export default ObservedProductsPage;

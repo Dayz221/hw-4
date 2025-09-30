@@ -10,9 +10,7 @@ export const useLocalStore = <T extends ILocalStore>(creator: () => T): T => {
         ref.current = creator();
     }
 
-    useEffect(() => {
-        return () => ref.current?.destroy();
-    })
+    useEffect(() => () => ref.current?.destroy(), []);
 
     return ref.current;
 }

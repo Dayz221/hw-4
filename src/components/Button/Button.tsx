@@ -10,12 +10,14 @@ export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   /** Текст кнопки */
   children: React.ReactNode;
 
+  size?: "normal" | "small";
+
   color?: "primary" | "secondary";
 };
 
-const Button: React.FC<ButtonProps> = ({loading, children, className, disabled, color = "primary", ...props}) => {
+const Button: React.FC<ButtonProps> = ({loading, children, className, disabled, size = "normal", color = "primary", ...props}) => {
   return (
-    <button className={classNames(styles.button, {[styles.loading]: loading, [styles.disabled]: disabled}, className, styles[color])} disabled={disabled || loading} {...props} >
+    <button className={classNames(styles.button, {[styles.loading]: loading, [styles.disabled]: disabled, [styles[size]]: true}, className, styles[color])} disabled={disabled || loading} {...props} >
       {loading && <Loader className={styles.button_loader} size='s' />}
       {children}
     </button>

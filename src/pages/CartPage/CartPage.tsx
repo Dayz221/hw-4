@@ -1,23 +1,28 @@
-import type React from "react";
-
+import React from "react";
 import { observer } from "mobx-react-lite";
 import Text from "../../components/Text";
-
 import styles from "./CartPage.module.scss";
 import rootStore from "../../store/RootStore";
-import Card from "../../components/Card";
 import Button from "../../components/Button";
-import { evalPrice } from "../../utils/evalPrice";
 import { ROUTES } from "../../config/routes";
 import { useNavigate } from "react-router";
-import { useEffect } from "react";
+import CartItem from "./CartItem.tsx";
 
 const CartPage: React.FC = () => {
     const navigate = useNavigate();
 
+    if (!rootStore.user.userData) {
+        return (
+            <div className={styles.need_login}>
+                <Text className={styles.need_login_text} align="center" view="p-20" color="primary">You need to be logged in to view your cart.</Text>
+                <Button onClick={() => navigate(ROUTES.login.path)}>Login</Button>
+            </div>
+        )
+    }
+
     return (
         <>
-            <Text className={styles.title} view="title" tag="h1" weight="bold" align="center">Products</Text>
+            <Text className={styles.title} view="title" tag="h1" weight="bold" align="center">Your Basket</Text>
 
             {rootStore.cart.items.length === 0 ?
                 <div className={styles.no_elements}>
@@ -27,18 +32,7 @@ const CartPage: React.FC = () => {
                 :
                 <div className={styles.products}>
                     {
-                        rootStore.cart.items.map((data, i) => {
-                            return <Card
-                                key={data.id}
-                                image={data.images[0].url}
-                                subtitle={data.description}
-                                title={data.title}
-                                captionSlot={data.productCategory.title}
-                                contentSlot={`$${evalPrice(data.price, data.discountPercent).toFixed(2)}`}
-                                actionSlot={<Button>Buy now</Button>}
-                                onClick={() => navigate(ROUTES.product.get(data.documentId))}
-                            />
-                        })
+                        rootStore.cart.items.map(data => <CartItem key={data.id} cartItemData={data} />)
                     }
                 </div>
             }
@@ -46,4 +40,5 @@ const CartPage: React.FC = () => {
     );
 }
 
-export default observer(CartPage);
+const ObservedCartPage = observer(CartPage);
+export default ObservedCartPage;
