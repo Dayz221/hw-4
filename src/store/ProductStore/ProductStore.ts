@@ -39,7 +39,7 @@ export default class ProductStore implements ILocalStore {
                 this._product = response;
                 this._meta = Meta.success;
             });
-        } catch (e) {
+        } catch {
             runInAction(() => {
                 this._meta = Meta.error;
             })

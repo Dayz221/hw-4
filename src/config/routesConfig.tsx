@@ -5,9 +5,12 @@ import ProductPage from "../pages/ProductPage";
 import CategoriesPage from "../pages/CategoriesPage";
 import AboutPage from "../pages/AboutPage";
 import Page404 from "../pages/Page404";
-
-import { ROUTES } from "./routes"
+import RegisterPage from "../pages/RegisterPage";
+import LoginPage from "../pages/LoginPage";
+import AccountPage from "../pages/AccountPage";
 import CartPage from "../pages/CartPage";
+
+import { ROUTES } from "./routes";
 
 export const routesConfig: RouteObject[] = [
     {
@@ -43,5 +46,17 @@ export const routesConfig: RouteObject[] = [
                 element: <Page404 />
             }
         ]
-    }
+    },
+    {
+        path: ROUTES.register.path,
+        element: <RegisterPage />
+    },
+    {
+        path: ROUTES.login.path,
+        element: <LoginPage />
+    },
+    {
+        path: ROUTES.account.path,
+        element: <AccountPage />
+    },
 ];

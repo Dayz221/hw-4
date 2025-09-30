@@ -1,22 +1,21 @@
 import { action, computed, makeObservable, observable, runInAction } from "mobx";
 import { Meta } from "../../utils/meta";
 import type { ProductCardModel } from "../models/products/ProductCard";
-import { fetchCategories, fetchProducts } from "../../api/Strapi/Products";
-import { CARDS_COUNT } from "../../consts";
+import { fetchProducts } from "../../api/Strapi/Products";
 import { normalizeFetchProductsResponse } from "../models/products/FetchProductsResponse";
 import { initialPaginationInfo, type PaginationInfoModel } from "../models/products/PaginationInfo";
-import rootStore from "../RootStore";
 import type { ILocalStore } from "../useLocalStore/useLocalStore";
 import type { Option } from "../../components/MultiDropdown";
-import { normalizeCategory } from "../models/categories/category";
+import CategoriesStore from "../CategoriesStore";
 
-type privateFields = "_meta" | "_products" | "_pagination" | "_categories";
+type privateFields = "_meta" | "_products" | "_pagination" | "_categoriesStore";
 
 export default class ProductsStore implements ILocalStore {
     private _products: ProductCardModel[] = [];
     private _pagination: PaginationInfoModel = initialPaginationInfo();
-    private _categories: Option[] = [];
     private _meta: Meta = Meta.initial;
+
+    private _categoriesStore = new CategoriesStore();
 
     constructor() {
         makeObservable<this, privateFields>(
@@ -24,59 +23,33 @@ export default class ProductsStore implements ILocalStore {
             {
                 _products: observable.ref,
                 _pagination: observable,
-                _categories: observable.ref,
                 _meta: observable,
+                _categoriesStore: observable,
                 meta: computed,
                 products: computed,
                 pagination: computed,
-                categories: computed,
+                categoriesStore: computed,
                 fetchProducts: action,
-                fetchCategories: action
             }
         )
     }
 
-    async fetchProducts() {
-        this._meta = Meta.loading;
+    async fetchProducts(params: { page: number; search: string; categories: Option[]; count: number }) {
+        if (this._meta === Meta.loading)
+            return;
 
-        const response = await fetchProducts(
-            Number(rootStore.query.getParam("page") || 1),
-            String(rootStore.query.getParam("search") || ""),
-            rootStore.query.getParam("categories") as Option[] || [],
-            CARDS_COUNT
-        );
+        this._meta = Meta.loading;
+        const { page, search, categories, count } = params;
+        const validCategories = this._categoriesStore.validate(categories);
+        const response = await fetchProducts(page, search, validCategories, count);
 
         runInAction(() => {
             try {
                 const normalized = normalizeFetchProductsResponse(response);
                 this._products = normalized.data;
                 this._pagination = normalized.pagination;
-
                 this._meta = Meta.success;
-
-
-            } catch (err) {
-                this._meta = Meta.error;
-            }
-        })
-    }
-
-    async fetchCategories() {
-        this._meta = Meta.loading;
-
-        const response = await fetchCategories();
-
-        runInAction(() => {
-            try {
-                this._categories = []
-                for (const fromCategory of response) {
-                    this._categories.push(normalizeCategory(fromCategory))
-                }
-
-                this._meta = Meta.success;
-
-
-            } catch (err) {
+            } catch {
                 this._meta = Meta.error;
             }
         })
@@ -90,12 +63,12 @@ export default class ProductsStore implements ILocalStore {
         return this._products;
     }
 
-    get pagination() {
-        return this._pagination;
+    get categoriesStore() {
+        return this._categoriesStore;
     }
 
-    get categories() {
-        return this._categories;
+    get pagination() {
+        return this._pagination;
     }
 
     destroy() {

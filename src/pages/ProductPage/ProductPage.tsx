@@ -1,6 +1,6 @@
 import type React from "react";
 import { useNavigate, useParams } from "react-router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import styles from "./ProductPage.module.scss";
 import ArrowDownIcon from "../../components/icons/ArrowDownIcon";
@@ -9,7 +9,6 @@ import ImageSlider from "../../components/ImageSlider";
 import { evalPrice } from "../../utils/evalPrice";
 import Button from "../../components/Button";
 import Card from "../../components/Card";
-import { DESKTOP_WIDTH } from "../../consts";
 import type { ProductCardModel } from "../../store/models/products/ProductCard";
 import { useLocalStore } from "../../store/useLocalStore/useLocalStore";
 import ProductStore from "../../store/ProductStore/ProductStore";
@@ -19,29 +18,21 @@ import { toJS } from "mobx";
 import Loader from "../../components/Loader";
 import { ROUTES } from "../../config/routes";
 import rootStore from "../../store/RootStore";
+import { DeviceType, useDeviceType } from "../../hooks/useDeviceType";
 
 const ProductPage: React.FC = () => {
     const { id } = useParams();
     const productStore = useLocalStore(() => new ProductStore());
     const navigate = useNavigate();
 
-    const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth <= DESKTOP_WIDTH);
-
-    useEffect(() => {
-        const onResize = () => {
-            setIsMobile(window.innerWidth <= DESKTOP_WIDTH);
-        }
-
-        window.addEventListener("resize", onResize);
-
-        return () => window.removeEventListener("resize", onResize);
-    }, [])
+    const deviceType = useDeviceType();
 
     useEffect(() => {
         productStore.fetchProduct(id || "");
-    }, [id])
+    }, [id, productStore]);
 
     const related_items: ProductCardModel[] = JSON.parse(localStorage.getItem("related_items") || "[]");
+    const onCart = (productStore.product) && rootStore.cart.checkInCart(productStore.product) || false;
 
     return (
         <>
@@ -60,13 +51,25 @@ const ProductPage: React.FC = () => {
                 <div className={styles.product}>
                     <ImageSlider images={toJS(productStore.product.images)} />
                     <div className={styles.product_info}>
-                        <Text tag="h1" className={styles.title} view={isMobile ? "p-32" : "title"} maxLines={2} weight="bold">{productStore.product.title}</Text>
-                        <Text className={styles.description} view={isMobile ? "p-16" : "p-20"} maxLines={4} color="secondary">{productStore.product.description}</Text>
-                        <Text className={styles.price} view={isMobile ? "p-32" : "title"} weight="bold">${evalPrice(productStore.product.price, productStore.product.discountPercent).toFixed(2)}</Text>
+                        <Text tag="h1" className={styles.title} view={deviceType === DeviceType.mobile ? "p-32" : "title"} maxLines={2} weight="bold">{productStore.product.title}</Text>
+                        <Text className={styles.description} view={deviceType === DeviceType.mobile ? "p-16" : "p-20"} maxLines={4} color="secondary">{productStore.product.description}</Text>
+                        <Text className={styles.price} view={deviceType === DeviceType.mobile ? "p-32" : "title"} weight="bold">${evalPrice(productStore.product.price, productStore.product.discountPercent).toFixed(2)}</Text>
 
                         <div className={styles.actions}>
                             <Button>Buy now</Button>
-                            <Button color="secondary" onClick={() => rootStore.cart.addItem(productStore.product!)} disabled={!productStore.product}>{rootStore.cart.checkInCart(productStore.product) ? "On cart!" : "Add to Cart"}</Button>
+                            <Button
+                                color="secondary"
+                                onClick={() => {
+                                    if (onCart) {
+                                        navigate(ROUTES.cart.get());
+                                    } else if (productStore.product) {
+                                        rootStore.cart.addItem(productStore.product.id);
+                                    }
+                                }}
+                                disabled={!productStore.product}
+                            >
+                                {onCart ? "On cart!" : "Add to Cart"}
+                            </Button>
                         </div>
                     </div>
                 </div>
@@ -76,8 +79,8 @@ const ProductPage: React.FC = () => {
 
             <div className={styles.related_items}>
                 {
-                    related_items.reverse().map((data, i) => {
-                        if (i === 3 || (isMobile && i == 2))
+                    [...related_items].reverse().map((data, i) => {
+                        if (i === 3 || (deviceType === DeviceType.mobile && i == 2))
                             return;
 
                         return <Card
@@ -97,4 +100,5 @@ const ProductPage: React.FC = () => {
     )
 }
 
-export default observer(ProductPage);
+const ObservedProductPage = observer(ProductPage);
+export default ObservedProductPage;
