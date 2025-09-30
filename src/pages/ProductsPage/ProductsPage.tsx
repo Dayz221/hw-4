@@ -54,6 +54,7 @@ const ProductsPage: React.FC = () => {
     const productsStore = useLocalStore(() => new ProductsStore());
     const categoriesStore = productsStore.categoriesStore;
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [search, setSearch] = useState<string>("");
     const [queryParams, setQueryParams] = useState<QueryParams>(initialQueryParams);
